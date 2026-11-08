@@ -11,8 +11,10 @@ Create a domain method skill, not a new investigation workflow. Use the format
 below and read `assets/SKILL-template.md` for the starting document. Resolve the
 template path relative to this skill's directory.
 
-Read the destination repository's `campaign-identification/SKILL.md` and
-`safe-data-ingestion/SKILL.md` before authoring. Read a neighboring domain skill
+Resolve `<skills-root>` to the destination's skill collection directory:
+`skills/` in this repository, or the supported skill directory for an installed
+collection. Read `<skills-root>/campaign-identification/SKILL.md` and
+`<skills-root>/safe-data-ingestion/SKILL.md` before authoring. Read a neighboring domain skill
 for comparable methods if useful. These are authoring references, not permission
 to inspect datasets or outside research. Do not start an investigation, acquire
 data, inspect raw rows, or infer dataset-specific facts while scaffolding.
