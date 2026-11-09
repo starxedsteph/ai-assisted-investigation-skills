@@ -1,6 +1,6 @@
 # AI investigation skills
 
-Agent Skills for human-guided, evidence-based investigations in public data.
+Agent Skills for user-guided, evidence-based investigations in public data.
 They help an AI agent prepare untrusted inputs,
 measure patterns, test competing explanations, and export evidence with clear
 limitations. They are investigation guidance, not an autonomous abuse detector,
@@ -22,8 +22,8 @@ Suspicious patterns are leads, not proof of wrongdoing.
 | [`investigation-package-impersonation`](investigation-package-impersonation/SKILL.md) | Investigating reference-led impersonation or publication-led families in software package-registry and package-manager data, such as PyPI/pip or the npm registry/npm CLI, through naming patterns, upload timing, and distinctive shared metadata across publishers. | Method scaffold using project/release relationships, publication timestamps, metadata, and registry naming rules. A reference set is needed to identify imitation, not to start family discovery. Separately authorized verification matches advisories and artifact identities while preserving conflicting assessments; this is not a validated malware detector or package-execution tool. |
 | [`investigation-results`](investigation-results/SKILL.md) | Explicitly requested saving or exporting of existing work, including provisional findings. | Recorded findings and an agreed output directory. Produces requested Markdown/CSV deliverables with a shared filename prefix; chat-only summaries stay in chat. |
 | [`platform-enforcement-evaluation`](platform-enforcement-evaluation/SKILL.md) | Separately comparing frozen candidates with supplied removals, restrictions, or suspensions. | An explicit evaluation request, frozen discovery results, and action observations. Does not perform enforcement or infer why an action occurred. |
-| [`bigquery-setup`](bigquery-setup/SKILL.md) | Choosing or creating a project with permission, finding its ID, choosing sandbox or optional billing with spending safeguards, and preparing CLI access, approved sources, a local profile, and conservative query limits. | Conversational, staged setup with human decisions about project, billing, location, sources, pricing, and caps. Does not enable billing automatically or run a test query; budget alerts are not hard spending limits. |
-| [`bigquery-query`](bigquery-query/SKILL.md) | Planning, estimating, and submitting explicitly approved read-only BigQuery queries. | A configured profile and reviewed SQL. Requires a dry run, a positive server-enforced byte cap, and fresh human approval for each submission. |
+| [`bigquery-setup`](bigquery-setup/SKILL.md) | One-time BigQuery setup: project, CLI sign-in, and query limits. | Public data only. Gives new users a setup checklist and never turns on billing. |
+| [`bigquery-query`](bigquery-query/SKILL.md) | Running approved read-only queries against public datasets. | Triggered by natural-language requests. Each query is estimated and approved before it runs. |
 | [`scaffold-investigation-skill`](scaffold-investigation-skill/SKILL.md) | Creating or standardizing another domain method using the shared protocol and template. | A domain question, scope, and required observations. Authors a skill; does not investigate a dataset. |
 
 ## Install and load
@@ -98,36 +98,23 @@ or dataset-specific ingestion scripts are bundled here.
 
 ## BigQuery access and safeguards
 
-BigQuery use requires the Google Cloud CLI (`gcloud` and `bq`) and Python 3.
-Use `bigquery-setup` to configure access and limits, then `bigquery-query` to
-prepare queries. If you do not have a project or know its ID, setup walks you
-through selecting an existing project or creating one with permission, and
-finding **Project ID** in the Google Cloud console. This is the project where
-query jobs run, not necessarily the project storing the source tables.
+The BigQuery skills let your agent query public datasets, such as Google's `bigquery-public-data`, as part of an investigation. Google's free [BigQuery sandbox](https://cloud.google.com/bigquery/docs/sandbox) includes 1 TiB of queries per month, so most investigations cost nothing. A personal Google account works fine.
 
-Setup explains scan and result limits in plain language, recommends starting
-settings, and asks you to accept or change them rather than calculate byte counts.
-A scan limit is a maximum, not a payment amount; a result-row limit only bounds
-retrieved output. Billing-disabled sandbox use prevents paid BigQuery usage in
-that project, subject to sandbox limits, but does not cap spending elsewhere.
-With billing enabled, a byte cap cannot guarantee a $0 charge. Positive scan
-limits are required in both modes; zero does not mean "use only the free tier."
-Remembering settings locally does not authorize any query execution.
+**Set up once.** Ask your agent to "run BigQuery setup." If you don't have a Google Cloud project yet, it gives you a short checklist. With your permission, the agent installs the Google Cloud CLI, signs you in, and suggests query limits you can accept or change. Settings are saved locally in `.bigquery-investigation/`, which git ignores.
 
-- Billing is never enabled automatically.
-- Each submission requires a dry-run estimate, a positive server-enforced
-  `maximum_bytes_billed` cap, and fresh human approval.
-- `LIMIT`, quotas, and budget alerts are not hard spending caps.
-- Keep `.bigquery-investigation/` ignored and credentials out of version control.
+**Then just ask.** You don't need to do anything special to use `bigquery-query`. Ask in natural language, for example "find accounts that starred these repos in the same hour," and the agent writes the SQL. It estimates how much data the query will scan and asks before it runs.
 
-See the individual skills for the full safeguards. The local helper tests need
-neither credentials nor the Cloud CLI:
+Safeguards:
+
+- Billing is never turned on automatically.
+- Every query gets a size estimate, a hard per-query scan limit, and your approval before it runs.
+- Budget alerts and quotas are not hard spending caps. In a project with billing on, a scan limit can't guarantee $0.
+
+Neither the local helper tests nor setup checks require credentials:
 
 ```bash
 python3 -m unittest discover -s <skills-directory>/bigquery-query/tests
 ```
-
-Replace `<skills-directory>` with your skill directory.
 
 ## Authoring and extending methods
 
