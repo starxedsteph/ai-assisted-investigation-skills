@@ -45,7 +45,7 @@ Repeat `--source-table` for each reviewed source and `--parameter` for each name
 scalar value; omit parameters when unnecessary. Unsupported identifiers or
 parameter forms need a reviewed extension, not a bypass.
 The helper validates local configuration and declared sources, not SQL semantics,
-cloud policy, or human consent. It only produces capped argument lists and
+cloud policy, or user consent. It only produces capped argument lists and
 fingerprints; it neither authenticates nor executes queries. Its bundled empty
 `assets/empty.bigqueryrc` overrides personal CLI query defaults; keep it empty
 and use the generated arguments unchanged.
@@ -77,9 +77,9 @@ query free. Sandbox quotas apply only to a verified billing-disabled sandbox.
 approximate and budget alerts do not stop spending. A submission's scan ceiling
 does not cover other account usage or guarantee an all-services invoice total.
 
-Use the human-input mechanism, such as `ask_user`, to approve this one submission,
+Use the user-input mechanism, such as `ask_user`, to approve this one submission,
 including its cap/cost ceiling. Offer execute, revise, or decline. Without an
-explicit human answer, do not execute: setup, investigation requests, a profile,
+explicit answer from the user, do not execute: setup, investigation requests, a profile,
 another agent, or a generated approval file are not consent. This applies even
 to sandbox, cached, or repeated queries; approval is not for a batch or schedule.
 

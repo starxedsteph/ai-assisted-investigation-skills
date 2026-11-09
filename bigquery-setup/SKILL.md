@@ -1,6 +1,6 @@
 ---
 name: bigquery-setup
-description: Helps a human set up BigQuery access for investigations of public datasets, including choosing or creating a project with permission, finding its project ID, a billing-disabled sandbox or optional billing with spending safeguards, CLI installation and authentication, an explicit location, chosen public source tables, and conservative query limits. Use when preparing BigQuery for first use, finding an execution project ID, fixing setup, or intentionally changing sources or limits. Does not run investigation queries, enable billing automatically, or authorize later executions.
+description: Helps users set up BigQuery access for investigations of public datasets, including choosing or creating a project with permission, finding its project ID, a billing-disabled sandbox or optional billing with spending safeguards, CLI installation and authentication, an explicit location, chosen public source tables, and conservative query limits. Use when preparing BigQuery for first use, finding an execution project ID, fixing setup, or intentionally changing sources or limits. Does not run investigation queries, enable billing automatically, or authorize later executions.
 ---
 
 # BigQuery setup
@@ -16,26 +16,26 @@ Do not run a test query, including `SELECT 1`, to finish setup.
 ## Confirm the environment and access
 
 Identify local shell versus Cloud Shell and check for installed `gcloud` and `bq`.
-Start by asking whether the human already has a Google Cloud project to use.
+Start by asking whether the user already has a Google Cloud project to use.
 If they do not know, guide them through the project steps below before asking
 for an execution project ID. Collect setup decisions in stages rather than
 presenting a form that assumes they already know every setting.
 Keep explanations, links, and step-by-step guidance in conversational chat,
 giving the next manageable step rather than a full setup questionnaire.
-The exception is a human who needs to create a project: first present the
+The exception is a user who needs to create a project: first present the
 new-project checklist described below, then continue in stages.
 Where the host requires a structured question tool, use it only for a short
 question or confirmation; do not put the walkthrough in the form or bundle
 unrelated decisions such as project creation and CLI installation.
 Use plain language before technical names. Reuse decisions and source identifiers
-the human has already supplied; obtain missing locations from table metadata
+the user has already supplied; obtain missing locations from table metadata
 rather than asking them to understand or re-enter every setting. Recommend
 starting settings with reasons, then ask for a short confirmation with an option
 to change them. Do not make a novice fill out byte counts or a configuration form.
 If they express confusion, explain the immediate decision before asking again.
 A cancelled confirmation is not consent; do not repeat the same questionnaire
 or treat a question about a setting as approval.
-Explain and obtain human permission before installing tools, creating projects,
+Explain and get the user's permission before installing tools, creating projects,
 linking billing, enabling APIs, changing IAM or quotas, or switching/impersonating
 identities. Never enable billing automatically to repair a setup or quota error.
 
@@ -46,11 +46,11 @@ jobs run and query usage is accounted for. It may differ from the project that
 stores the source tables. The **project ID** is its unique string identifier
 (for example, `investigation-sandbox-123`), not its display name, numeric project
 number, or a dataset ID. Do not inherit the CLI's active project or substitute
-a public dataset's project for the human's chosen execution project.
+a public dataset's project for the user's chosen execution project.
 
 ### Use an existing project and find its ID
 
-1. Direct the human to the Google Cloud console's
+1. Direct the user to the Google Cloud console's
    [Welcome page](https://console.cloud.google.com/welcome) and have them sign in
    with the intended Google account.
 2. Have them open the project picker at the top and select the project they
@@ -58,7 +58,7 @@ a public dataset's project for the human's chosen execution project.
    **Project ID** appear below the Welcome heading; ask them to copy **Project ID**.
    If the project is missing, suggest checking the account or asking their
    administrator for access, not creating a replacement automatically.
-3. Confirm the copied ID and intended use with the human. Once CLI authentication
+3. Confirm the copied ID and intended use with the user. Once CLI authentication
    is available, inspect only that project's metadata with
    `gcloud projects describe EXECUTION_PROJECT --format='value(projectId)'`.
    Report permission or lookup errors explicitly; do not switch projects.
@@ -67,7 +67,7 @@ See [finding project identifiers](https://docs.cloud.google.com/resource-manager
 
 ### Create a project only if needed
 
-When the human says they need to create a project, present
+When the user says they need to create a project, present
 [`assets/new-project-checklist.md`](assets/new-project-checklist.md) in chat
 before asking anything else, as inline markdown rather than a code block.
 Present it nearly verbatim so the instructions don't drift between sessions.
@@ -81,7 +81,7 @@ Only these changes are allowed:
   task-sized value is enough.
 
 The checklist is guidance, not permission. Installing tools, signing in,
-running checks, and saving settings each still need the human's OK at the time.
+running checks, and saving settings each still need the user's OK at the time.
 When they return, follow the steps below to verify each item. Install with
 their permission and fall back to the linked install docs if installation fails.
 Explain what each command does before running it.
@@ -89,32 +89,32 @@ Explain what each command does before running it.
 The rest of this section is reference for helping with creation itself.
 Explain the proposed project name, intended organization/folder, and the chosen
 sandbox or billing-enabled approach, then obtain explicit permission for creation.
-The human may create it in the console themselves; agent-driven creation still
+The user may create it in the console themselves; agent-driven creation still
 needs this permission. A general setup request is not permission to create it.
 
 1. Once signed in to the [Google Cloud console](https://console.cloud.google.com/),
-   the human can click **Create project** directly. The
+   the user can click **Create project** directly. The
    [sandbox setup steps](https://docs.cloud.google.com/bigquery/docs/sandbox)
    and [Manage resources](https://console.cloud.google.com/cloud-resource-manager)
-   are backup routes. The human handles sign-in and any terms acceptance.
+   are backup routes. The user handles sign-in and any terms acceptance.
    Do not follow the tutorial's sample-query steps.
 2. Suggest the project name `Investigation sandbox`. Explain that the
    **Project ID** fills in automatically from the name, can be edited before
    creation, and is permanent afterward. Avoid sensitive information in either value.
 3. Select the intended organization/folder, or **No organization** if available.
    Work-managed accounts may not offer **No organization** or may block project
-   creation. The human can ask their administrator for permission or use a
+   creation. The user can ask their administrator for permission or use a
    personal Google account, which is fine for public data. The project creation
    **Location** refers to its organization/folder, not the BigQuery dataset region.
 4. Google may link a billing account automatically at creation, even when the
-   human intended a sandbox. If they chose a billing-disabled sandbox, have them
+   user intended a sandbox. If they chose a billing-disabled sandbox, have them
    check the project's billing and disable it if linked, as described below, then
    verify with `gcloud billing projects describe`.
    If they need paid features or their organization requires billing, explain
    the billing-enabled option and spending safeguards below and confirm their
    choice before linking an account, starting a paid trial, or upgrading.
    Billing is supported, but project creation alone is not billing permission.
-5. Have the human click **Create**, select the new project, and copy its
+5. Have the user click **Create**, select the new project, and copy its
    **Project ID** from the Welcome page as above. If creation is denied by
    permissions, organization policy, or project quotas, report the blocker and
    suggest asking their administrator or using a personal Google account; do
@@ -135,17 +135,17 @@ Offer both approaches without treating billing as a setup failure:
 - A [sandbox](https://docs.cloud.google.com/bigquery/docs/sandbox) avoids paid
   usage but has usage and feature limits and automatic table expiration.
 - A billing-enabled project can support needs beyond the sandbox. Explain that
-  usage can incur charges and agree on the human's intended spending allowance
+  usage can incur charges and agree on the user's intended spending allowance
   and safeguards; do not assume a new project or free trial prevents overspending.
 
 Before linking billing, explain current regional query pricing, the intended
 per-query bytes-billed cap, and the limits of daily quotas and budget alerts
-described below. Distinguish the human's desired total spending allowance from
+described below. Distinguish the user's desired total spending allowance from
 an enforceable per-query scan cap: this workflow cannot guarantee an account-wide
 hard spending limit. If they require that guarantee, report the limitation
 before they commit to billing.
 
-For a human who chooses billing, confirm the exact project and intended billing
+For a user who chooses billing, confirm the exact project and intended billing
 account without requesting payment details. Guide them to the console's
 [Billing page](https://console.cloud.google.com/billing), select the intended
 project, and follow its link/change billing account flow. They handle payment
@@ -157,19 +157,19 @@ See [enabling billing for a project](https://docs.cloud.google.com/billing/docs/
 ## Verify billing, authentication, and sources
 
 After confirming the execution project, ask which public tables the
-investigation uses and its purpose. Help the human obtain missing source
+investigation uses and its purpose. Help the user obtain missing source
 identifiers or location from table metadata; do not enumerate unrelated
 public datasets. Public datasets need no extra role grants; do not request
 IAM changes to read them.
 
-Verify the human's chosen billing status: a billing-disabled sandbox for someone
+Verify the user's chosen billing status: a billing-disabled sandbox for someone
 avoiding paid usage, or billing-enabled access with agreed spending safeguards.
 For billing-enabled access, verify ordinary on-demand pricing, including
 reservation assignments. Unknown or capacity/edition pricing blocks this
 byte-capped workflow. Do not assume unused free allowance in a new project:
 free usage may be shared at the billing-account level.
 
-If billing is enabled but the human wants unpaid BigQuery use, explain that a
+If billing is enabled but the user wants unpaid BigQuery use, explain that a
 billing-disabled sandbox blocks paid BigQuery usage in that project, subject to
 sandbox limits. It does not guarantee zero spending elsewhere on the account.
 Offer a separate sandbox if the existing project has needed or shared resources.
@@ -177,7 +177,7 @@ If asked how to disable billing, guide them to Billing > My projects, find the
 exact project ID, and choose Actions > Disable billing. Warn that disabling
 billing can stop services and affect resources in that project; do not close the
 billing account or change IAM to work around missing permissions. Agent-driven
-unlinking needs separate permission. After the human reports completion, verify
+unlinking needs separate permission. After the user reports completion, verify
 that exact project's billing status with
 `gcloud billing projects describe EXECUTION_PROJECT --format='json(projectId,billingEnabled)'`.
 
@@ -220,10 +220,10 @@ necessarily incur a charge. Zero is not a "free tier only" setting: an unset or
 zero limit blocks this workflow, and a byte cap cannot guarantee a $0 charge
 on a billing-enabled project.
 
-Always propose concrete values the human can accept or override: by default a
+Always propose concrete values the user can accept or override: by default a
 100 GiB scan limit, which is a tenth of the sandbox's 1 TiB monthly free query
 allowance, and 1,000 result rows. Lower the scan limit when source metadata shows
-a smaller task-sized value is enough. Do not ask the human to pick values from
+a smaller task-sized value is enough. Do not ask the user to pick values from
 scratch or calculate bytes. For a sandbox,
 explain the unpaid route first; do not frame the scan limit as a paid allowance.
 For billing-enabled use, explain the proposed scan-charge ceiling at the current
@@ -242,7 +242,7 @@ estimate the query first and ask separately before running it." Then ask only
 The recommendation is not an execution approval.
 
 Every later submission, including
-sandbox, cached, metadata SQL, or repeated queries, needs fresh human approval;
+sandbox, cached, metadata SQL, or repeated queries, needs fresh user approval;
 setup is not standing spending permission.
 
 Offer [custom daily quotas](https://docs.cloud.google.com/bigquery/docs/custom-quotas)
@@ -250,7 +250,7 @@ as optional additional safeguards. Per-user quotas apply uniformly within a
 project and daily resets use Pacific Time; quotas are approximate and may be
 exceeded. Explain shared-project impact and verify approved changes.
 Offer [budget alerts](https://docs.cloud.google.com/billing/docs/how-to/budgets)
-at thresholds aligned with the human's intended spending allowance, explaining
+at thresholds aligned with the user's intended spending allowance, explaining
 their scope and notification delays. Creating a budget requires separate
 permission; alerts monitor spending but do not stop charges.
 Neither safeguard is an account-wide hard
