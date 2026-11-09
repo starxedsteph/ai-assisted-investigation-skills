@@ -79,6 +79,9 @@ Only these changes are allowed:
   (`brew install --cask google-cloud-sdk`) on macOS.
 - Replace the recommended scan limit if source metadata shows a smaller
   task-sized value is enough.
+- If the user has already explicitly chosen a billing-enabled project, replace
+  the sandbox paragraphs with a short note that billing stays linked and
+  spending safeguards come next. Otherwise keep the sandbox default.
 
 The checklist is guidance, not permission. Installing tools, signing in,
 running checks, and saving settings each still need the user's OK at the time.

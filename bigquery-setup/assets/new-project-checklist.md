@@ -17,7 +17,7 @@ Here's everything you need to get BigQuery ready. You can follow along now, or d
 2. For **Project name**, enter `Investigation sandbox`. The **Project ID** fills in automatically from the name. You can edit it before you click **Create**, but you can't change it afterward.
 3. For **Organization**, a personal Google account is fine, because this setup only queries public data. If you sign in with a work account, you may not see **No organization**, or you may not be allowed to create projects at all. If so, ask your admin for permission or switch to a personal account.
 4. Click **Create**, select the new project, and copy its **Project ID** from the [Welcome page](https://console.cloud.google.com/welcome).
-5. Check billing. Google sometimes links a billing account automatically when you create a project. Open [Billing](https://console.cloud.google.com/billing), go to **My projects**, find your project, and choose **Actions > Disable billing** if billing is linked. I'll double-check this once the command-line tools are set up.
+5. Check billing. Google sometimes links a billing account automatically when you create a project. For the free sandbox, open [Billing](https://console.cloud.google.com/billing), go to **My projects**, find your project, and choose **Actions > Disable billing** if billing is linked. If you chose to keep billing on, leave it linked. I'll double-check that billing matches your choice once the command-line tools are set up.
 
 If the console looks different, Google's guides can help: [BigQuery sandbox](https://docs.cloud.google.com/bigquery/docs/sandbox) and [creating projects](https://docs.cloud.google.com/resource-manager/docs/creating-managing-projects).
 
@@ -29,7 +29,7 @@ After the install, and with your OK, I'll run these checks:
 
 - `gcloud auth login` opens your browser so you can sign in with the same Google account. This lets the command-line tools act as you. I never see or store your password or tokens.
 - `gcloud projects describe PROJECT_ID` confirms your account can see the new project.
-- `gcloud billing projects describe PROJECT_ID` confirms billing is off.
+- `gcloud billing projects describe PROJECT_ID` confirms billing matches your choice: off for the sandbox, or on if you chose billing.
 
 **Query limits**
 
