@@ -20,6 +20,8 @@ for an execution project ID. Collect setup decisions in stages rather than
 presenting a form that assumes they already know every setting.
 Keep explanations, links, and step-by-step guidance in conversational chat,
 giving the next manageable step rather than a full setup questionnaire.
+The exception is a human who needs to create a project: first give the
+complete setup checklist described below, then continue in stages.
 Where the host requires a structured question tool, use it only for a short
 question or confirmation; do not put the walkthrough in the form or bundle
 unrelated decisions such as project creation and CLI installation.
@@ -62,6 +64,35 @@ a public dataset's project for the human's chosen execution project.
 See [finding project identifiers](https://docs.cloud.google.com/resource-manager/docs/view-update-projects#identifying_projects).
 
 ### Create a project only if needed
+
+When the human says they need to create a project, always give them the
+complete setup checklist in chat before asking anything else. They may want to
+follow it on their own and come back later, so don't send only the next step
+or ask for the project ID first. Write it as reference instructions in plain
+language, grouped into these sections:
+
+1. **Create the project:** use the console steps below, including that the
+   Project ID can't be changed after creation, that a sandbox leaves billing
+   unlinked, and where to copy the Project ID.
+2. **Install and sign in to the CLI:** install the
+   [Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install), which
+   includes `gcloud` and `bq`, using the method for the human's platform. Sign
+   in with `gcloud auth login` using the same account. Confirm the project with
+   `gcloud projects describe PROJECT_ID --format='value(projectId)'`. Skip
+   steps the environment check already found complete, such as in Cloud Shell.
+3. **Get access to data:** identify approved source tables as
+   `project:dataset.table` and their location. Request BigQuery Job User on
+   the execution project and BigQuery Data Viewer on the sources, not broader roles.
+4. **Choose limits:** explain the scan limit and result-row limit described
+   below, with recommended starting values the human can change later.
+5. **Save settings:** explain that the agent saves the agreed settings to the
+   workspace's ignored `.bigquery-investigation/profile.json` from
+   `assets/profile-template.json`, without credentials or results.
+
+End the checklist by saying they can come back when ready and the agent will
+verify each step and save the settings with them. The checklist is guidance,
+not permission: installing tools, creating projects, signing in, and saving
+settings still need the permissions described in this skill.
 
 Explain the proposed project name, intended organization/folder, and the chosen
 sandbox or billing-enabled approach, then obtain explicit permission for creation.
