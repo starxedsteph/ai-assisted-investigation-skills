@@ -1,6 +1,6 @@
 # AI investigation skills
 
-Agent Skills for user-guided, evidence-based investigations in public data.
+Agent Skills for human-guided, evidence-based investigations in public data.
 They help an AI agent prepare untrusted inputs,
 measure patterns, test competing explanations, and export evidence with clear
 limitations. They are investigation guidance, not an autonomous abuse detector,
@@ -15,23 +15,68 @@ Suspicious patterns are leads, not proof of wrongdoing.
 
 | Skill | What it is for | What to supply or expect |
 | --- | --- | --- |
-| [`campaign-identification`](campaign-identification/SKILL.md) | Shared investigation workflow: focused questions, timing, interaction graphs, content comparisons, controls, and corroboration. | A question or seed and safely prepared observational data. Produces iterative findings for discussion, not an automatic final report. |
-| [`safe-data-ingestion`](safe-data-ingestion/SKILL.md) | Defensive acquisition and preparation of untrusted CSVs or databases, including outcome-blind inputs and inert text handling. | Supplied files or an explicitly authorized download source. Requires schema checks, bounded parsing, sanitation, and a provenance audit. |
-| [`investigation-engagement-farming`](investigation-engagement-farming/SKILL.md) | Investigating stars, likes, upvotes, or similar endorsements through bursts, repeated timing, shared targets, and account patterns. | Account-target events and timestamps where available. Account-age and dormancy checks require actual metadata and observation history. |
-| [`investigation-fake-reviews`](investigation-fake-reviews/SKILL.md) | Investigating on-platform rating concentration, arrival surges, repeated review text, and reviewer activity. | Review identities, targets, ratings, bodies, dates, and reviewer keys where available. Purchase-verification checks require a documented field. |
-| [`investigation-package-impersonation`](investigation-package-impersonation/SKILL.md) | Investigating reference-led impersonation or publication-led families in software package-registry and package-manager data, such as PyPI/pip or the npm registry/npm CLI, through naming patterns, upload timing, and distinctive shared metadata across publishers. | Method scaffold using project/release relationships, publication timestamps, metadata, and registry naming rules. A reference set is needed to identify imitation, not to start family discovery. Separately authorized verification matches advisories and artifact identities while preserving conflicting assessments; this is not a validated malware detector or package-execution tool. |
-| [`investigation-results`](investigation-results/SKILL.md) | Explicitly requested saving or exporting of existing work, including provisional findings. | Recorded findings and an agreed output directory. Produces requested Markdown/CSV deliverables with a shared filename prefix; chat-only summaries stay in chat. |
-| [`platform-enforcement-evaluation`](platform-enforcement-evaluation/SKILL.md) | Separately comparing frozen candidates with supplied removals, restrictions, or suspensions. | An explicit evaluation request, frozen discovery results, and action observations. Does not perform enforcement or infer why an action occurred. |
-| [`bigquery-setup`](bigquery-setup/SKILL.md) | One-time BigQuery setup: project, CLI sign-in, and query limits. | Public data only. Gives new users a setup checklist and never turns on billing. |
-| [`bigquery-query`](bigquery-query/SKILL.md) | Running approved read-only queries against public datasets. | Triggered by natural-language requests. Each query is estimated and approved before it runs. |
-| [`scaffold-investigation-skill`](scaffold-investigation-skill/SKILL.md) | Creating or standardizing another domain method using the shared protocol and template. | A domain question, scope, and required observations. Authors a skill; does not investigate a dataset. |
+| [`campaign-identification`](skills/campaign-identification/SKILL.md) | Shared investigation workflow: focused questions, timing, interaction graphs, content comparisons, controls, and corroboration. | A question or seed and safely prepared observational data. Produces iterative findings for discussion, not an automatic final report. |
+| [`safe-data-ingestion`](skills/safe-data-ingestion/SKILL.md) | Defensive acquisition and preparation of untrusted CSVs or databases, including outcome-blind inputs and inert text handling. | Supplied files or an explicitly authorized download source. Requires schema checks, bounded parsing, sanitation, and a provenance audit. |
+| [`investigation-engagement-farming`](skills/investigation-engagement-farming/SKILL.md) | Investigating stars, likes, upvotes, or similar endorsements through bursts, repeated timing, shared targets, and account patterns. | Account-target events and timestamps where available. Account-age and dormancy checks require actual metadata and observation history. |
+| [`investigation-fake-reviews`](skills/investigation-fake-reviews/SKILL.md) | Investigating on-platform rating concentration, arrival surges, repeated review text, and reviewer activity. | Review identities, targets, ratings, bodies, dates, and reviewer keys where available. Purchase-verification checks require a documented field. |
+| [`investigation-package-impersonation`](skills/investigation-package-impersonation/SKILL.md) | Investigating reference-led impersonation or publication-led families in software package-registry and package-manager data, such as PyPI/pip or the npm registry/npm CLI, through naming patterns, upload timing, and distinctive shared metadata across publishers. | Method scaffold using project/release relationships, publication timestamps, metadata, and registry naming rules. A reference set is needed to identify imitation, not to start family discovery. Separately authorized verification matches advisories and artifact identities while preserving conflicting assessments; this is not a validated malware detector or package-execution tool. |
+| [`investigation-results`](skills/investigation-results/SKILL.md) | Explicitly requested saving or exporting of existing work, including provisional findings. | Recorded findings and an agreed output directory. Produces requested Markdown/CSV deliverables with a shared filename prefix; chat-only summaries stay in chat. |
+| [`platform-enforcement-evaluation`](skills/platform-enforcement-evaluation/SKILL.md) | Separately comparing frozen candidates with supplied removals, restrictions, or suspensions. | An explicit evaluation request, frozen discovery results, and action observations. Does not perform enforcement or infer why an action occurred. |
+| [`bigquery-setup`](skills/bigquery-setup/SKILL.md) | Choosing or creating a project with permission, finding its ID, choosing sandbox or optional billing with spending safeguards, and preparing CLI access, approved sources, a local profile, and conservative query limits. | Conversational, staged setup with human decisions about project, billing, location, sources, pricing, and caps. Does not enable billing automatically or run a test query; budget alerts are not hard spending limits. |
+| [`bigquery-query`](skills/bigquery-query/SKILL.md) | Planning, estimating, and submitting explicitly approved read-only BigQuery queries. | A configured profile and reviewed SQL. Requires a dry run, a positive server-enforced byte cap, and fresh human approval for each submission. |
+| [`scaffold-investigation-skill`](skills/scaffold-investigation-skill/SKILL.md) | Creating or standardizing another domain method using the shared protocol and template. | A domain question, scope, and required observations. Authors a skill; does not investigate a dataset. |
 
 ## Install and load
 
+All source skill bundles live under [`skills/`](skills/), with each entry point
+at `skills/<skill-name>/SKILL.md`. This is the repository's distribution layout,
+not a promise that an agent automatically indexes a plain `skills/` directory.
 Use an agent that supports the [Agent Skills format](https://agentskills.io/)
-and local file access. Copy the complete skill folders into its supported skill
-directory, such as `.github/skills/` for GitHub Copilot or `.claude/skills/` for
-Claude Code. Keep bundled assets and scripts, not just `SKILL.md`.
+and local file access.
+
+Copy the **contents of `skills/`** into a supported location, so the resulting
+path is `<supported-location>/<skill-name>/SKILL.md`, not
+`<supported-location>/skills/<skill-name>/SKILL.md`:
+
+| Agent | Project location in the repository being investigated | Personal location on the local machine |
+| --- | --- | --- |
+| GitHub Copilot CLI | `.github/skills/`, `.claude/skills/`, or `.agents/skills/` | `~/.copilot/skills/` or `~/.agents/skills/` |
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+
+For example, from this checkout, after reviewing the skills and checking that
+the destination has no conflicting skill folders:
+
+```bash
+mkdir -p /path/to/target-project/.github/skills
+cp -R skills/. /path/to/target-project/.github/skills/
+```
+
+Install the complete collection together to preserve sibling dependencies such
+as `../campaign-identification/SKILL.md`. If installing a subset, also install
+every referenced sibling skill into the same location. Keep bundled assets,
+scripts, and tests, not just `SKILL.md`. The repository has no package build step;
+when distributing a skill folder or archive, preserve its internal structure
+and supply its sibling dependencies separately in that same skills location.
+
+For Copilot CLI, start a new session or use `/skills reload`, then
+`/skills info investigation-engagement-farming` to confirm the loaded location.
+To use this checkout without copying, use `/skills add` to configure the
+absolute path to this checkout's `skills/` directory as an additional location,
+then reload and check the skills. See the
+[Copilot CLI setup guide](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills).
+
+The GitHub Copilot app makes configured repository and CLI skills available;
+manage them through **Customize > Skills**, as described in the
+[app setup guide](https://docs.github.com/en/copilot/how-tos/github-copilot-app/customize-github-copilot-app).
+For Claude Code, start a session in the target project and invoke
+`/investigation-engagement-farming`; see
+[Claude Code skill locations](https://code.claude.com/docs/en/skills#choose-where-skills-load).
+Local personal skills are not automatically available to remote or cloud
+agents. Follow the setup guide for that execution surface.
+
+Consumers of the previous root-level layout must update source paths to
+`skills/<skill-name>/`. No duplicate root-level bundles or compatibility aliases
+are provided.
 
 Ask your agent to use a skill by name, or let it select one from your request.
 These are instructions and helpers, not a standalone application; the agent
@@ -98,29 +143,44 @@ or dataset-specific ingestion scripts are bundled here.
 
 ## BigQuery access and safeguards
 
-The BigQuery skills let your agent query public datasets, such as Google's `bigquery-public-data`, as part of an investigation. Google's free [BigQuery sandbox](https://cloud.google.com/bigquery/docs/sandbox) includes 1 TiB of queries per month, so most investigations cost nothing. A personal Google account works fine.
+BigQuery use requires the Google Cloud CLI (`gcloud` and `bq`) and Python 3.
+Use `bigquery-setup` to configure access and limits, then `bigquery-query` to
+prepare queries. If you do not have a project or know its ID, setup walks you
+through selecting an existing project or creating one with permission, and
+finding **Project ID** in the Google Cloud console. This is the project where
+query jobs run, not necessarily the project storing the source tables.
 
-**Set up once.** Ask your agent to "run BigQuery setup." If you don't have a Google Cloud project yet, it gives you a short checklist. With your permission, the agent installs the Google Cloud CLI, signs you in, and suggests query limits you can accept or change. Settings are saved locally in `.bigquery-investigation/`, which git ignores.
+Setup explains scan and result limits in plain language, recommends starting
+settings, and asks you to accept or change them rather than calculate byte counts.
+A scan limit is a maximum, not a payment amount; a result-row limit only bounds
+retrieved output. Billing-disabled sandbox use prevents paid BigQuery usage in
+that project, subject to sandbox limits, but does not cap spending elsewhere.
+With billing enabled, a byte cap cannot guarantee a $0 charge. Positive scan
+limits are required in both modes; zero does not mean "use only the free tier."
+Remembering settings locally does not authorize any query execution.
 
-**Then just ask.** You don't need to do anything special to use `bigquery-query`. Ask in natural language, for example "find accounts that starred these repos in the same hour," and the agent writes the SQL. It estimates how much data the query will scan and asks before it runs.
+- Billing is never enabled automatically.
+- Each submission requires a dry-run estimate, a positive server-enforced
+  `maximum_bytes_billed` cap, and fresh human approval.
+- `LIMIT`, quotas, and budget alerts are not hard spending caps.
+- Keep `.bigquery-investigation/` ignored and credentials out of version control.
 
-Safeguards:
+See the individual skills for the full safeguards. The local helper tests need
+neither credentials nor the Cloud CLI:
 
-- Billing is never turned on automatically.
-- Every query gets a size estimate, a hard per-query scan limit, and your approval before it runs.
-- Budget alerts and quotas are not hard spending caps. In a project with billing on, a scan limit can't guarantee $0.
-
-Neither the local helper tests nor setup checks require credentials:
+From this repository's root:
 
 ```bash
-python3 -m unittest discover -s <skills-directory>/bigquery-query/tests
+python3 -m unittest discover -s skills/bigquery-query/tests
 ```
+
+For an installed copy, replace `skills` with the supported skill directory.
 
 ## Authoring and extending methods
 
-Use [`scaffold-investigation-skill`](scaffold-investigation-skill/SKILL.md) when
+Use [`scaffold-investigation-skill`](skills/scaffold-investigation-skill/SKILL.md) when
 adding or standardizing a domain method. Start from its
-[template](scaffold-investigation-skill/assets/SKILL-template.md) and review
+[template](skills/scaffold-investigation-skill/assets/SKILL-template.md) and review
 checklist. Extend the shared investigation protocol rather than duplicating it,
 preserve existing behavior when reorganizing, and test methods against suitable
 observations and controls.
