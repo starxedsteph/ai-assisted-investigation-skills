@@ -1,14 +1,16 @@
 ---
 name: bigquery-setup
-description: Helps a human set up BigQuery access for investigations, including choosing or creating a project with permission, finding its project ID, optional billing with spending safeguards, CLI authentication, an explicit location, approved source tables, and conservative query limits. Use when preparing BigQuery for first use, finding an execution project ID, fixing setup, or intentionally changing access or limits. Does not run investigation queries, enable billing automatically, or authorize later executions.
+description: Helps a human set up BigQuery access for investigations of public datasets, including choosing or creating a project with permission, finding its project ID, a billing-disabled sandbox or optional billing with spending safeguards, CLI installation and authentication, an explicit location, chosen public source tables, and conservative query limits. Use when preparing BigQuery for first use, finding an execution project ID, fixing setup, or intentionally changing sources or limits. Does not run investigation queries, enable billing automatically, or authorize later executions.
 ---
 
 # BigQuery setup
 
 Prepare access and a local profile for [`bigquery-query`](../bigquery-query/SKILL.md),
-not an investigation or query execution. Read
+not an investigation or query execution. This setup is for public datasets only,
+such as those in `bigquery-public-data`; it does not cover private or
+access-controlled sources. A personal Google account is acceptable. Read
 `../campaign-identification/SKILL.md` and `../safe-data-ingestion/SKILL.md`
-for source authorization and evidence handling; public availability is not permission.
+for scoping which public tables the investigation uses and for evidence handling.
 Do not run a test query, including `SELECT 1`, to finish setup.
 
 ## Confirm the environment and access
@@ -20,13 +22,13 @@ for an execution project ID. Collect setup decisions in stages rather than
 presenting a form that assumes they already know every setting.
 Keep explanations, links, and step-by-step guidance in conversational chat,
 giving the next manageable step rather than a full setup questionnaire.
-The exception is a human who needs to create a project: first give the
-complete setup checklist described below, then continue in stages.
+The exception is a human who needs to create a project: first present the
+new-project checklist described below, then continue in stages.
 Where the host requires a structured question tool, use it only for a short
 question or confirmation; do not put the walkthrough in the form or bundle
 unrelated decisions such as project creation and CLI installation.
 Use plain language before technical names. Reuse decisions and source identifiers
-the human has already supplied; obtain missing locations from authorized metadata
+the human has already supplied; obtain missing locations from table metadata
 rather than asking them to understand or re-enter every setting. Recommend
 starting settings with reasons, then ask for a short confirmation with an option
 to change them. Do not make a novice fill out byte counts or a configuration form.
@@ -65,54 +67,49 @@ See [finding project identifiers](https://docs.cloud.google.com/resource-manager
 
 ### Create a project only if needed
 
-When the human says they need to create a project, always give them the
-complete setup checklist in chat before asking anything else. They may want to
-follow it on their own and come back later, so don't send only the next step
-or ask for the project ID first. Write it as reference instructions in plain
-language, grouped into these sections:
+When the human says they need to create a project, present
+[`assets/new-project-checklist.md`](assets/new-project-checklist.md) in chat
+before asking anything else, as inline markdown rather than a code block.
+Present it nearly verbatim so the instructions don't drift between sessions.
+Only these changes are allowed:
 
-1. **Create the project:** use the console steps below, including that the
-   Project ID can't be changed after creation, that a sandbox leaves billing
-   unlinked, and where to copy the Project ID.
-2. **Install and sign in to the CLI:** install the
-   [Google Cloud CLI](https://docs.cloud.google.com/sdk/docs/install), which
-   includes `gcloud` and `bq`, using the method for the human's platform. Sign
-   in with `gcloud auth login` using the same account. Confirm the project with
-   `gcloud projects describe PROJECT_ID --format='value(projectId)'`. Skip
-   steps the environment check already found complete, such as in Cloud Shell.
-3. **Get access to data:** identify approved source tables as
-   `project:dataset.table` and their location. Request BigQuery Job User on
-   the execution project and BigQuery Data Viewer on the sources, not broader roles.
-4. **Choose limits:** explain the scan limit and result-row limit described
-   below, with recommended starting values the human can change later.
-5. **Save settings:** explain that the agent saves the agreed settings to the
-   workspace's ignored `.bigquery-investigation/profile.json` from
-   `assets/profile-template.json`, without credentials or results.
+- Omit steps the environment check already confirmed, such as the CLI install
+  when `gcloud` and `bq` are present or sign-in in an authenticated Cloud Shell.
+- Name the platform's install method in the CLI section, such as Homebrew
+  (`brew install --cask google-cloud-sdk`) on macOS.
+- Replace the recommended scan limit if source metadata shows a smaller
+  task-sized value is enough.
 
-End the checklist by saying they can come back when ready and the agent will
-verify each step and save the settings with them. The checklist is guidance,
-not permission: installing tools, creating projects, signing in, and saving
-settings still need the permissions described in this skill.
+The checklist is guidance, not permission. Installing tools, signing in,
+running checks, and saving settings each still need the human's OK at the time.
+When they return, follow the steps below to verify each item. Install with
+their permission and fall back to the linked install docs if installation fails.
+Explain what each command does before running it.
 
+The rest of this section is reference for helping with creation itself.
 Explain the proposed project name, intended organization/folder, and the chosen
 sandbox or billing-enabled approach, then obtain explicit permission for creation.
 The human may create it in the console themselves; agent-driven creation still
 needs this permission. A general setup request is not permission to create it.
 
-1. For a billing-disabled sandbox, start at
-   [BigQuery Studio](https://console.cloud.google.com/bigquery) and follow the
+1. Once signed in to the [Google Cloud console](https://console.cloud.google.com/),
+   the human can click **Create project** directly. The
    [sandbox setup steps](https://docs.cloud.google.com/bigquery/docs/sandbox)
-   through project creation only. The human handles sign-in and any terms
-   acceptance. Do not follow the tutorial's sample-query steps.
-2. If they already have console access, they can instead open
-   [Manage resources](https://console.cloud.google.com/cloud-resource-manager)
-   and choose **Create project**.
-3. Enter the agreed **Project name**. Review the generated **Project ID**;
-   it can be edited before creation but is permanent afterward. Avoid sensitive
-   information in either value. Select the intended organization/folder, or
-   **No organization** if available and appropriate. The project creation
+   and [Manage resources](https://console.cloud.google.com/cloud-resource-manager)
+   are backup routes. The human handles sign-in and any terms acceptance.
+   Do not follow the tutorial's sample-query steps.
+2. Suggest the project name `Investigation sandbox`. Explain that the
+   **Project ID** fills in automatically from the name, can be edited before
+   creation, and is permanent afterward. Avoid sensitive information in either value.
+3. Select the intended organization/folder, or **No organization** if available.
+   Work-managed accounts may not offer **No organization** or may block project
+   creation. The human can ask their administrator for permission or use a
+   personal Google account, which is fine for public data. The project creation
    **Location** refers to its organization/folder, not the BigQuery dataset region.
-4. If the human chose a billing-disabled sandbox, leave billing unlinked.
+4. Google may link a billing account automatically at creation, even when the
+   human intended a sandbox. If they chose a billing-disabled sandbox, have them
+   check the project's billing and disable it if linked, as described below, then
+   verify with `gcloud billing projects describe`.
    If they need paid features or their organization requires billing, explain
    the billing-enabled option and spending safeguards below and confirm their
    choice before linking an account, starting a paid trial, or upgrading.
@@ -120,7 +117,8 @@ needs this permission. A general setup request is not permission to create it.
 5. Have the human click **Create**, select the new project, and copy its
    **Project ID** from the Welcome page as above. If creation is denied by
    permissions, organization policy, or project quotas, report the blocker and
-   direct them to their administrator; do not change IAM or quotas automatically.
+   suggest asking their administrator or using a personal Google account; do
+   not change IAM or quotas automatically.
 
 With installed, authenticated CLI access, an alternative is
 `gcloud projects create PROJECT_ID`, adding an explicit `--organization` or
@@ -158,10 +156,11 @@ See [enabling billing for a project](https://docs.cloud.google.com/billing/docs/
 
 ## Verify billing, authentication, and sources
 
-After confirming the execution project, ask for the dataset location, exact
-approved source tables, and purpose. Help the human obtain missing source
-identifiers or location from metadata for the sources they authorize; do not
-enumerate unrelated public datasets.
+After confirming the execution project, ask which public tables the
+investigation uses and its purpose. Help the human obtain missing source
+identifiers or location from table metadata; do not enumerate unrelated
+public datasets. Public datasets need no extra role grants; do not request
+IAM changes to read them.
 
 Verify the human's chosen billing status: a billing-disabled sandbox for someone
 avoiding paid usage, or billing-enabled access with agreed spending safeguards.
@@ -186,11 +185,12 @@ Use `gcloud auth login` only with permission when local CLI authentication is
 needed; Cloud Shell may already be authenticated. The CLI has its own credentials;
 Application Default Credentials are only needed for separately requested client
 libraries. Never request, display, copy, or commit tokens, service-account keys,
-or credential files. Explain least privilege: BigQuery Job User on the execution
-project and Data Viewer on approved sources, not Owner, Editor, or BigQuery Admin.
+or credential files. The creator of a new project already has the access needed
+to run query jobs in it. Do not request Owner, Editor, BigQuery Admin, or other
+role changes as part of this setup.
 See [authentication and access](https://docs.cloud.google.com/bigquery/docs/authentication).
 
-Inspect approved metadata, not rows:
+Inspect the chosen tables' metadata, not rows:
 
 ```bash
 bq --project_id=EXECUTION_PROJECT --location=LOCATION --format=prettyjson \
@@ -199,7 +199,7 @@ bq --project_id=EXECUTION_PROJECT --location=LOCATION --format=prettyjson \
 
 Verify schema, type, location, coverage, and row-access policies. Do not use
 `bq head`, Preview, or `SELECT *` as an access check. Views require review of
-underlying sources and functions. The query workflow supports authorized native
+underlying sources and functions. The query workflow supports public native
 tables, not external/federated, cross-region, remote-function, or ML-backed sources.
 
 ## Agree on limits and save the profile
@@ -220,9 +220,11 @@ necessarily incur a charge. Zero is not a "free tier only" setting: an unset or
 zero limit blocks this workflow, and a byte cap cannot guarantee a $0 charge
 on a billing-enabled project.
 
-Recommend a task-sized positive scan limit and usually 1,000 result rows, using
-approved source metadata when available. Let the human accept or change the
-recommendation instead of requiring them to calculate bytes. For a sandbox,
+Always propose concrete values the human can accept or override: by default a
+100 GiB scan limit, which is a tenth of the sandbox's 1 TiB monthly free query
+allowance, and 1,000 result rows. Lower the scan limit when source metadata shows
+a smaller task-sized value is enough. Do not ask the human to pick values from
+scratch or calculate bytes. For a sandbox,
 explain the unpaid route first; do not frame the scan limit as a paid allowance.
 For billing-enabled use, explain the proposed scan-charge ceiling at the current
 regional [price](https://cloud.google.com/bigquery/pricing), including billing
@@ -237,7 +239,7 @@ is too large, it is blocked rather than the limit being raised automatically.
 I'll remember these settings locally, without credentials or results. We will
 estimate the query first and ask separately before running it." Then ask only
 "Use these recommended settings?" with accept, change, or pause choices.
-The 100 GiB value is an example, not an automatic default or an execution approval.
+The recommendation is not an execution approval.
 
 Every later submission, including
 sandbox, cached, metadata SQL, or repeated queries, needs fresh human approval;
@@ -257,11 +259,13 @@ outside a per-query scan cap. Do not provision reservations, autoscaling,
 scheduled queries, permanent results, uploads, cloud exports, or billing-export
 pipelines under this setup.
 
-Fill `assets/profile-template.json` into the agreed workspace's ignored
+Fill `assets/profile-template.json` into the agreed workspace's
 `.bigquery-investigation/profile.json` after confirmation, preserving local edits.
+This repository's `.gitignore` already excludes that folder; in another
+workspace, confirm it is ignored before saving.
 Describe this as remembering agreed settings locally, not as a separate technical
 "profile" decision. A short confirmation may cover the explained limits and
-saving them together; source authorization and other unresolved decisions still
+saving them together; the choice of source tables and other unresolved decisions still
 need their own clarification.
 Store operational settings only, never credentials or rows. The template starts
 with no project, sources, or execution allowance; leave unresolved values null
