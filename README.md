@@ -88,9 +88,12 @@ documentation for installation details and tool permissions.
 1. **Define the question.** Supply your files or authorize a specific source, and
    agree on the scope. Browsing, enrichment, and cloud spending need separate
    permission.
-2. **Prepare the data.** Use `safe-data-ingestion` to create safe observational
-   inputs without labels or outcomes. For blind discovery, give a fresh session
-   only those prepared inputs; previously seen results cannot be unseen.
+2. **Prepare the data.** Whenever a file, database, pasted dataset, or query
+   result is introduced for analysis, automatically apply `safe-data-ingestion`
+   before inspecting or using it; no separate request is needed. Verify the
+   provenance and audit of previously prepared inputs too. For blind discovery,
+   give a fresh session only safe observational inputs without labels or
+   outcomes; previously seen results cannot be unseen.
 3. **Investigate together.** Start with a focused check, discuss the evidence and
    limitations, and refine the next question. Keep findings, tables, and summaries
    in chat; necessary scoped working artifacts can still support analysis.
@@ -105,7 +108,8 @@ documentation for installation details and tool permissions.
 
 ### Example requests
 
-With safely prepared observational data:
+When data is introduced, the investigation skill applies `safe-data-ingestion`
+before analysis. For example:
 
 > Use investigation-engagement-farming to check whether target `target-a` shares
 > accounts with other targets during this burst. Show a first comparison and its

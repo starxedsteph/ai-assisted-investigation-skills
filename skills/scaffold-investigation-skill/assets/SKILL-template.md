@@ -17,8 +17,9 @@ from the supplied schema rather than assuming named datasets or field meanings.
 Before inspecting data or applying these techniques, read
 `../campaign-identification/SKILL.md` and follow its shared collaborative workflow,
 evidence boundary, and outcome-blinding rules. This skill supplies domain
-methods, not a separate investigation process. Use `safe-data-ingestion` when
-preparing inputs; open existing databases read-only.
+methods, not a separate investigation process. Apply the shared mandatory
+data-ingestion gate whenever data is introduced for analysis; do not wait for a
+separate request. Open existing databases read-only.
 
 ## Inputs and prerequisites
 

@@ -1,6 +1,6 @@
 ---
 name: investigation-engagement-farming
-description: Identifies coordinated engagement (stars, likes, upvotes, reviews) by analyzing interaction timing, shared target clusters, and account activity patterns. Use when investigating abnormal engagement spikes, sleeper accounts, or collusive endorsement rings.
+description: Identifies coordinated engagement (stars, likes, upvotes, reviews) by analyzing interaction timing, shared target clusters, and account activity patterns. Use when investigating abnormal engagement spikes, sleeper accounts, or collusive endorsement rings. Automatically apply safe-data-ingestion whenever data is introduced for analysis; do not wait for a separate request.
 ---
 
 # Investigation engagement farming
@@ -21,8 +21,8 @@ fields, or publisher-specific filters.
 Before inspecting data or applying these techniques, read
 `../campaign-identification/SKILL.md` and follow its shared collaborative workflow,
 evidence boundary, and outcome-blinding rules. This skill supplies engagement
-methods, not a separate investigation process. Use `safe-data-ingestion` when
-preparing inputs; open existing databases read-only.
+methods, not a separate investigation process. Apply the shared mandatory
+data-ingestion gate to every input; open existing databases read-only.
 
 ## Inputs and prerequisites
 

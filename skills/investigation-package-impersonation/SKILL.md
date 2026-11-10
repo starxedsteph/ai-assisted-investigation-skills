@@ -1,6 +1,6 @@
 ---
 name: investigation-package-impersonation
-description: Investigates potentially misleading software-package families using package-registry and package-manager data, such as PyPI/pip or the npm registry/npm CLI, through publication bursts, naming strategies, and shared metadata across publishers. Use when reviewing package-manager ecosystem data, package typosquatting, apparent official-package impersonation, deceptive functionality claims, coordinated uploads without a known reference package, or recurring registry publication waves. Includes separately authorized advisory corroboration. Not a malware execution tool, a download-count detector, or a substitute for release provenance review.
+description: Investigates potentially misleading software-package families using package-registry and package-manager data, such as PyPI/pip or the npm registry/npm CLI, through publication bursts, naming strategies, and shared metadata across publishers. Use when reviewing package-manager ecosystem data, package typosquatting, apparent official-package impersonation, deceptive functionality claims, coordinated uploads without a known reference package, or recurring registry publication waves. Automatically apply safe-data-ingestion whenever data is introduced for analysis; do not wait for a separate request. Includes separately authorized advisory corroboration. Not a malware execution tool, a download-count detector, or a substitute for release provenance review.
 ---
 
 # Investigation package impersonation
@@ -40,8 +40,8 @@ reconstruct repository compromises.
 Before inspecting data or applying these techniques, read
 `../campaign-identification/SKILL.md` and follow its shared collaborative workflow,
 evidence boundary, and outcome-blinding rules. This skill supplies domain
-methods, not a separate investigation process. Use `safe-data-ingestion` when
-preparing inputs; open existing databases read-only.
+methods, not a separate investigation process. Apply the shared mandatory
+data-ingestion gate to every input; open existing databases read-only.
 
 ## Inputs and prerequisites
 

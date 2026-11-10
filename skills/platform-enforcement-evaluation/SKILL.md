@@ -1,6 +1,6 @@
 ---
 name: platform-enforcement-evaluation
-description: Compares independently identified candidates with observed platform actions, including removals, restrictions, and suspensions. Use when the user explicitly requests enforcement coverage, action timing, or a comparison between frozen investigation findings and supplied platform-action observations. Not for campaign discovery or performing enforcement.
+description: Compares independently identified candidates with observed platform actions, including removals, restrictions, and suspensions. Use when the user explicitly requests enforcement coverage, action timing, or a comparison between frozen investigation findings and supplied platform-action observations. Automatically apply safe-data-ingestion whenever action observations or other new data are introduced for analysis; do not wait for a separate request. Not for campaign discovery or performing enforcement.
 ---
 
 # Platform enforcement evaluation
@@ -14,8 +14,8 @@ a report. This skill measures observed actions; it does not remove content,
 restrict accounts, or recommend sanctions.
 
 Before inspecting data, read `../campaign-identification/SKILL.md` for the shared
-collaborative workflow and evidence boundary. Use `safe-data-ingestion` when
-preparing inputs; open existing databases read-only.
+collaborative workflow, evidence boundary, and mandatory data-ingestion gate;
+open existing databases read-only.
 
 ## Evaluation boundary
 

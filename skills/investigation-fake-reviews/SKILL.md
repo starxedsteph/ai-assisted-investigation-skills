@@ -1,6 +1,6 @@
 ---
 name: investigation-fake-reviews
-description: Analyzes customer and user review datasets to detect artificial rating inflation, generic boilerplate text, velocity spikes, and unusual reviewer activity. Use when investigating suspected fake reviews, unverified rating clusters, or review manipulation.
+description: Analyzes customer and user review datasets to detect artificial rating inflation, generic boilerplate text, velocity spikes, and unusual reviewer activity. Use when investigating suspected fake reviews, unverified rating clusters, or review manipulation. Automatically apply safe-data-ingestion whenever data is introduced for analysis; do not wait for a separate request.
 ---
 
 # Investigation fake reviews
@@ -16,8 +16,8 @@ not proven fraud or operator identity.
 Before inspecting data or applying these techniques, read
 `../campaign-identification/SKILL.md` and follow its shared collaborative workflow,
 evidence boundary, and outcome-blinding rules. This skill supplies review
-methods, not a separate investigation process. Use `safe-data-ingestion` when
-preparing inputs; open existing databases read-only.
+methods, not a separate investigation process. Apply the shared mandatory
+data-ingestion gate to every input; open existing databases read-only.
 
 ## Inputs and prerequisites
 
