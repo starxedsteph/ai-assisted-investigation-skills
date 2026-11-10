@@ -1,6 +1,6 @@
 ---
 name: campaign-identification
-description: Collaboratively investigates coordinated networks in public datasets through iterative questions, temporal analysis, interaction graphs, content comparisons, and false-positive checks. Use when investigating engagement farming, review syndicates, bot activity, abnormal interaction bursts, or suspicious transaction waves across platforms.
+description: Collaboratively investigates coordinated networks in public datasets through iterative questions, temporal analysis, interaction graphs, content comparisons, and false-positive checks. Use when investigating engagement farming, review syndicates, bot activity, abnormal interaction bursts, or suspicious transaction waves across platforms. Automatically apply safe-data-ingestion whenever data is introduced for analysis; do not wait for a separate request.
 ---
 
 # Campaign Identification
@@ -50,7 +50,25 @@ still require their existing separate permissions.
 
 ## Evidence boundary
 
-Use only supplied CSV headers, records, and computations derived from them.
+### Mandatory data-ingestion gate
+
+Whenever a file, database, pasted dataset, query result, or other new data source
+is introduced for analysis, read and apply `safe-data-ingestion` before
+record-level inspection or calculations. This is automatic; do not wait for the
+human to ask. Follow its staged checks, starting with schema/header inventory.
+Apply it to each newly introduced source, including data described as sanitized,
+preprocessed, observational, or read-only. For an existing prepared artifact,
+verify its provenance and ingestion audit and complete any applicable checks
+before analysis; do not repeat transformations already documented as complete.
+If required checks or provenance are missing, do not treat the data as cleared—
+explain the gap and resolve it before proceeding.
+
+This gate does not authorize acquiring or enriching data. Preserve the source
+authorization and evidence-boundary rules below. If data has already been
+exposed, do not claim that later sanitation restores outcome blindness.
+
+Use only the supplied input's headers or schema, records, and computations
+derived from them.
 Do not consult nearby files, notebooks, READMEs, repository history, websites,
 papers, APIs, or record links without explicit authorization for the source and
 purpose. Filenames, publisher identity, remembered dataset facts, and examples

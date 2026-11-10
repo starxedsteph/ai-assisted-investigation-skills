@@ -1,6 +1,6 @@
 ---
 name: bigquery-query
-description: Prepares and runs explicitly approved, read-only BigQuery investigation queries after setup, with dry-run estimates and a positive server-enforced bytes-billed cap on every execution. Use for BigQuery SQL, query estimates, or retrieving approved observational inputs. Defaults to planning and dry runs; never treats setup or an investigation request as execution approval.
+description: Prepares and runs explicitly approved, read-only BigQuery investigation queries after setup, with dry-run estimates and a positive server-enforced bytes-billed cap on every execution. Use for BigQuery SQL, query estimates, or retrieving approved observational inputs. Automatically apply safe-data-ingestion to query results before analysis or exposing data-origin text; do not wait for a separate request. Defaults to planning and dry runs; never treats setup or an investigation request as execution approval.
 ---
 
 # BigQuery query
@@ -10,6 +10,9 @@ for missing or changed access, project, location, pricing, sources, or limits;
 never repair these by automatically enabling billing or raising caps.
 Read `../campaign-identification/SKILL.md` and `../safe-data-ingestion/SKILL.md`
 for investigation and evidence rules, not arbitrary browsing or outcome evaluation.
+Apply the shared mandatory data-ingestion gate to any data introduced for
+analysis. Pass each retrieved result through safe ingestion before analysis or
+exposing data-origin text; query approval does not waive this requirement.
 
 ## Prepare one capped query
 
