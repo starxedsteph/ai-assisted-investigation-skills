@@ -135,6 +135,6 @@ benign-explanation checks before supporting campaign-level coordination.
 On-platform patterns do not establish external recruitment, payment, common
 ownership, or proven fraud. Missing staging evidence leaves those links untested.
 
-Package recorded findings with `investigation-results` only when the human
+Package recorded findings with `results-export` only when the human
 requests an export; do not automatically produce a report or perform
 enforcement evaluation.

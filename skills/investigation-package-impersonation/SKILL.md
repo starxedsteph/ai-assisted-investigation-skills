@@ -320,6 +320,6 @@ unblinded and needs a separately scoped exploratory run; a genuinely blind
 test requires a fresh session with observational inputs only.
 
 Distinguish measured signals, candidate membership, and supported coordination
-under the shared protocol. Package recorded findings with `investigation-results`
+under the shared protocol. Package recorded findings with `results-export`
 only when the human requests an export; do not automatically produce a report
 or perform enforcement evaluation.
