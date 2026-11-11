@@ -171,6 +171,6 @@ effects within the shared evidence boundary. Without account-level data,
 within-account cadence and shared-account explanations remain untested.
 
 Distinguish measured signals, candidate membership, and supported coordination
-under the shared protocol. Package recorded findings with `investigation-results`
+under the shared protocol. Package recorded findings with `results-export`
 only when the human requests an export; do not automatically produce a report
 or perform enforcement evaluation.

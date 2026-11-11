@@ -36,7 +36,7 @@ findings. A general investigation request, completed calculation, stopping
 boundary, or "summarize what we found" is not file-creation permission.
 
 An explicit save/export request is the gate; the human need not declare
-exploration finished. Use `investigation-results` for the requested scope,
+exploration finished. Use `results-export` for the requested scope,
 including a provisional snapshot if requested. Saving a snapshot does not end
 exploration or authorize later deliverable updates. Do not repeatedly ask
 whether exploration is finished or solicit exports each round.

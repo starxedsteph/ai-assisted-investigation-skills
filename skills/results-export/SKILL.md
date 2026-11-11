@@ -1,9 +1,9 @@
 ---
-name: investigation-results
+name: results-export
 description: Packages completed or in-progress investigation findings into a saved Markdown summary and supporting CSV tables only when the human explicitly requests a saved document or export. Use for requests to save findings, export tables, or write a report file, including provisional snapshots; not for general investigation requests or chat-only summaries. Synthesizes existing work without starting new analysis or defaulting to a publication-ready dossier.
 ---
 
-# Investigation results
+# Results export
 
 ## Scope
 
